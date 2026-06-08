@@ -1,5 +1,9 @@
 # Human-in-the-Loop Email Agent
 
+**Język / Language:** **Polski** | [English](README.en.md)
+
+---
+
 Demo agenta LangGraph piszącego maile B2B z obowiązkową akceptacją człowieka przed wysyłką. Pokazuje praktyczne użycie mechanizmu `interrupt()` z LangGraph — agent zatrzymuje się w połowie wykonania, czeka na decyzję użytkownika (zatwierdź / popraw z feedbackiem) i wznawia pracę dokładnie w tym samym miejscu.
 
 CLI w terminalu, kolorowy interfejs przez `rich`, OpenAI jako backend LLM.
