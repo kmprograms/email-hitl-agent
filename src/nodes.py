@@ -144,3 +144,35 @@ def human_review(state: EmailAgentState) -> Command:
         goto="draft_email",
     )
 
+# -----------------------------------------------------------------------
+# NODE 3: SEND EMAIL
+# -----------------------------------------------------------------------
+
+def send_email(state: EmailAgentState) -> dict:
+    """
+    'Wysyła' maila — u nas zapisuje go do pliku .eml w katalogu sent/.
+    W produkcji tu byłby smtplib / SendGrid. Logika reszty grafu nie
+    zmienia się.
+    """
+    draft: str = state.get("draft", "")
+    if not draft:
+        raise ValueError("Brak treści maila do wysłania.")
+
+    company: str = state.get("recipient_company", "unknown")
+    slug: str = re.sub(r"[^a-z0-9]+", "-", company.lower().strip())[:40].strip("-") or "unknown"
+    # UTC w nazwie pliku — niezależne od strefy czasowej hosta
+    timestamp: str = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
+    filename: str = f"{timestamp}_{slug}.eml"
+
+    sent_dir = Path(settings.sent_dir)
+    sent_dir.mkdir(parents=True, exist_ok=True)
+    file_path = sent_dir / filename
+
+    file_path.write_text(draft, encoding="utf-8")
+
+    logger.info(f"[send_email] Mail 'wysłany' (zapisany): {file_path}")
+
+    return {
+        "sent_path": str(file_path),
+        "status": "sent",
+    }
