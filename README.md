@@ -10,6 +10,11 @@ CLI w terminalu, kolorowy interfejs przez `rich`, OpenAI jako backend LLM.
 
 ---
 
+> 📺 **Wolisz obejrzeć niż czytać?** Cały kod omawiam na YouTube:
+> **[Część 1](https://youtu.be/aYvnAoF-ET8)** · **[Część 2](https://youtu.be/tFtdAmqGt2k)**
+
+---
+
 ## Spis treści
 
 - [Funkcjonalność](#funkcjonalność)
