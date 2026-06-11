@@ -12,6 +12,11 @@ CLI in the terminal, colorful interface via `rich`, OpenAI as the LLM backend.
 
 ---
 
+> 📺 **Prefer watching over reading?** I walk through the entire codebase on YouTube:
+> **[Part 1](https://youtu.be/aYvnAoF-ET8)** · **[Part 2](https://youtu.be/tFtdAmqGt2k)**
+
+---
+
 ## Table of contents
 
 - [Features](#features)
