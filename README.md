@@ -4,7 +4,7 @@
 
 ---
 
-Demo agenta LangGraph piszącego maile B2B z obowiązkową akceptacją człowieka przed wysyłką. Pokazuje praktyczne użycie mechanizmu `interrupt()` z LangGraph — agent zatrzymuje się w połowie wykonania, czeka na decyzję użytkownika (zatwierdź / popraw z feedbackiem) i wznawia pracę dokładnie w tym samym miejscu.
+Demo agenta LangGraph piszącego maile B2B z obowiązkową akceptacją człowieka przed wysyłką. Pokazuje praktyczne użycie mechanizmu `interrupt()` z LangGraph. Agent zatrzymuje się w połowie wykonania, czeka na decyzję użytkownika (zatwierdź / popraw z feedbackiem) i wznawia pracę dokładnie w tym samym miejscu.
 
 CLI w terminalu, kolorowy interfejs przez `rich`, OpenAI jako backend LLM.
 
@@ -33,7 +33,7 @@ CLI w terminalu, kolorowy interfejs przez `rich`, OpenAI jako backend LLM.
 ## Funkcjonalność
 
 - Generowanie profesjonalnych maili po polsku na podstawie 3 inputów: odbiorca, firma, cel maila.
-- **Human-in-the-loop**: po wygenerowaniu szkicu agent czeka na decyzję — `Y` (wyślij) lub `N` (popraw z feedbackiem).
+- **Human-in-the-loop**: po wygenerowaniu szkicu agent czeka na decyzję: `Y` (wyślij) lub `N` (popraw z feedbackiem).
 - Pętla rewizji: model dostaje feedback i nanosi poprawki zamiast pisać od zera. Limit rewizji chroni przed nieskończoną pętlą (domyślnie 3, potem auto-approve).
 - "Wysyłka" maila = zapis do pliku `.eml` w katalogu `sent/` (łatwa podmiana na SMTP / SendGrid bez ruszania reszty grafu).
 - Czytelny terminalowy UI: banner, panele, spinner podczas wywołań LLM, kolorowe komunikaty błędów.
@@ -65,16 +65,16 @@ START → draft_email → human_review → send_email → END
 
 ### Checkpointer
 
-`InMemorySaver` — stan w pamięci procesu. Po wyjściu z programu stan przepada. W produkcji wystarczy podmienić na `PostgresSaver` / `RedisSaver` żeby stan przeżył restart i pozwolił wznowić graf z innego procesu.
+`InMemorySaver` - stan w pamięci procesu. Po wyjściu z programu stan przepada. W produkcji wystarczy podmienić na `PostgresSaver` / `RedisSaver` żeby stan przeżył restart i pozwolił wznowić graf z innego procesu.
 
 ### Mechanizm `interrupt()`
 
 `human_review` wywołuje `interrupt(payload)`:
 
 1. LangGraph zapisuje aktualny stan do checkpointera.
-2. Rzuca `GraphInterrupt` — `graph.invoke()` w `main.py` wraca normalnie.
+2. Rzuca `GraphInterrupt` - `graph.invoke()` w `main.py` wraca normalnie.
 3. Pętla w `main.py` czyta stan, pokazuje draft, pyta usera o decyzję.
-4. Wznowienie: `graph.invoke(Command(resume={...}), config)` — payload z `Command.resume` ląduje jako wartość zwracana przez `interrupt()`, graf wraca w to samo miejsce.
+4. Wznowienie: `graph.invoke(Command(resume={...}), config)` - payload z `Command.resume` ląduje jako wartość zwracana przez `interrupt()`, graf wraca w to samo miejsce.
 
 Bez `interrupt()` musielibyśmy ręcznie zarządzać tym, gdzie agent się zatrzymał i co już zrobił.
 
@@ -83,8 +83,8 @@ Bez `interrupt()` musielibyśmy ręcznie zarządzać tym, gdzie agent się zatrz
 ## Wymagania
 
 - **Python 3.13+** (wersja zapięta w `.python-version`).
-- **[uv](https://docs.astral.sh/uv/)** — menedżer pakietów i wirtualnych środowisk (rekomendowany).
-- **Klucz API OpenAI** — [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys).
+- **[uv](https://docs.astral.sh/uv/)** - menedżer pakietów i wirtualnych środowisk (rekomendowany).
+- **Klucz API OpenAI** - [https://platform.openai.com/api-keys](https://platform.openai.com/api-keys).
 
 ---
 
@@ -118,7 +118,7 @@ OPENAI_API_KEY=sk-...
 | `MAX_REVISIONS`      | nie      | `3`             | Limit rewizji przed auto-approve.                     |
 | `SENT_DIR`           | nie      | `sent`          | Katalog, do którego zapisywane są "wysłane" maile.    |
 
-Konfiguracja jest walidowana przez `pydantic-settings` na starcie aplikacji — brak klucza API rzuca czytelny błąd zamiast cichego crasha w trakcie pierwszego wywołania LLM.
+Konfiguracja jest walidowana przez `pydantic-settings` na starcie aplikacji. Brak klucza API rzuca czytelny błąd zamiast cichego crasha w trakcie pierwszego wywołania LLM.
 
 ---
 
@@ -209,9 +209,9 @@ email-agent/
 ### Separation of concerns
 
 - **`main.py`** zna tylko publiczne API: `build_email_agent()`, `graph.invoke()`, `Command`. Nie wie nic o promptach ani LLM.
-- **`src/nodes.py`** zna LLM, prompty, IO plików — całą logikę domenową.
+- **`src/nodes.py`** zna LLM, prompty, IO plików - całą logikę domenową.
 - **`src/ui.py`** zna tylko `rich` i input użytkownika. Można podmienić na FastAPI/Streamlit bez ruszania reszty.
-- **`src/config.py`** — jedno źródło prawdy dla konfiguracji, walidowane na starcie.
+- **`src/config.py`** - jedno źródło prawdy dla konfiguracji, walidowane na starcie.
 
 ---
 
