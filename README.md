@@ -136,8 +136,8 @@ CLI poprosi kolejno o:
 
 Następnie wyświetli wygenerowany draft i poprosi o decyzję:
 
-- **`Y`** — wyślij (mail trafia do `sent/`).
-- **`N`** — odrzuć i podaj feedback. Agent wygeneruje poprawioną wersję uwzględniając Twoje uwagi.
+- **`Y`** - wyślij (mail trafia do `sent/`).
+- **`N`** - odrzuć i podaj feedback. Agent wygeneruje poprawioną wersję uwzględniając Twoje uwagi.
 
 Wyjście: `Ctrl+C` lub `Ctrl+D` w dowolnym momencie.
 
